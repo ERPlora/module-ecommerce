@@ -1,0 +1,79 @@
+{% load djicons i18n %}
+
+<div class="side-sheet-header">
+    <h3 class="sheet-title">{% trans "Add Onlineorder" %}</h3>
+    <button class="sheet-close" @click="closePanel()">{% icon "close-outline" %}</button>
+</div>
+
+<div class="side-sheet-content">
+    <form id="add-online_order-form"
+          hx-post="{% url 'ecommerce:online_order_add' %}"
+          hx-target="#datatable-body"
+          hx-swap="innerHTML"
+          @htmx:after-request="closePanel()"
+          class="flex flex-col gap-4 p-6">
+        {% csrf_token %}
+
+        {% if error %}
+        <div class="callout callout-error">
+            <div class="callout-content"><span class="callout-text">{{ error }}</span></div>
+        </div>
+        {% endif %}
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Order Number" %}</label>
+            <input type="text" name="order_number" class="input input-sm w-full" placeholder="{% trans 'Order Number' %}">
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Customer Email" %}</label>
+            <input type="email" name="customer_email" class="input input-sm w-full" placeholder="{% trans 'Email' %}">
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Customer Name" %}</label>
+            <input type="text" name="customer_name" class="input input-sm w-full" placeholder="{% trans 'Customer Name' %}">
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Status" %}</label>
+            <select name="status" class="select select-sm w-full">
+                <option value="">{% trans "Select..." %}</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Subtotal" %}</label>
+            <input type="number" name="subtotal" class="input input-sm w-full" step="0.01" placeholder="0">
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Tax Amount" %}</label>
+            <input type="number" name="tax_amount" class="input input-sm w-full" step="0.01" placeholder="0">
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Total" %}</label>
+            <input type="number" name="total" class="input input-sm w-full" step="0.01" placeholder="0">
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Shipping Address" %}</label>
+            <textarea name="shipping_address" class="textarea textarea-sm w-full" rows="3"></textarea>
+        </div>
+
+        <div>
+            <label class="text-sm font-medium mb-1 block">{% trans "Notes" %}</label>
+            <textarea name="notes" class="textarea textarea-sm w-full" rows="3"></textarea>
+        </div>
+    </form>
+</div>
+
+<div class="side-sheet-footer">
+    <div class="flex justify-end gap-2">
+        <button type="button" class="btn btn-ghost btn-sm" @click="closePanel()">{% trans "Cancel" %}</button>
+        <button type="submit" form="add-online_order-form" class="btn btn-sm color-primary">
+            {% icon "add-outline" %} {% trans "Add" %}
+        </button>
+    </div>
+</div>
