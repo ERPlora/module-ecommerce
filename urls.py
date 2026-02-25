@@ -7,6 +7,11 @@ urlpatterns = [
     # Dashboard
     path('', views.dashboard, name='dashboard'),
 
+    # Navigation tab aliases
+    path('products/', views.online_orders_list, name='products'),
+    path('orders/', views.dashboard, name='orders'),
+
+
     # OnlineOrder
     path('online_orders/', views.online_orders_list, name='online_orders_list'),
     path('online_orders/add/', views.online_order_add, name='online_order_add'),
