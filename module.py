@@ -28,3 +28,14 @@ PERMISSIONS = [
 'ecommerce.change_onlineorder',
 'ecommerce.manage_settings',
 ]
+
+ROLE_PERMISSIONS = {
+    "admin": ["*"],
+    "manager": [
+        "change_onlineorder",
+        "view_onlineorder",
+    ],
+    "employee": [
+        "view_onlineorder",
+    ],
+}
