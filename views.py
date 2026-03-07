@@ -3,6 +3,8 @@ Online Store Module Views
 """
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
+from django.http import HttpResponse
+from django.urls import reverse
 from django.shortcuts import get_object_or_404, render as django_render
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -113,6 +115,7 @@ def online_orders_list(request):
     }
 
 @login_required
+@htmx_view('ecommerce/pages/online_order_add.html', 'ecommerce/partials/online_order_add_content.html')
 def online_order_add(request):
     hub_id = request.session.get('hub_id')
     if request.method == 'POST':
@@ -136,10 +139,13 @@ def online_order_add(request):
         obj.shipping_address = shipping_address
         obj.notes = notes
         obj.save()
-        return _render_online_orders_list(request, hub_id)
-    return django_render(request, 'ecommerce/partials/panel_online_order_add.html', {})
+        response = HttpResponse(status=204)
+        response['HX-Redirect'] = reverse('ecommerce:online_orders_list')
+        return response
+    return {}
 
 @login_required
+@htmx_view('ecommerce/pages/online_order_edit.html', 'ecommerce/partials/online_order_edit_content.html')
 def online_order_edit(request, pk):
     hub_id = request.session.get('hub_id')
     obj = get_object_or_404(OnlineOrder, pk=pk, hub_id=hub_id, is_deleted=False)
@@ -155,7 +161,7 @@ def online_order_edit(request, pk):
         obj.notes = request.POST.get('notes', '').strip()
         obj.save()
         return _render_online_orders_list(request, hub_id)
-    return django_render(request, 'ecommerce/partials/panel_online_order_edit.html', {'obj': obj})
+    return {'obj': obj}
 
 @login_required
 @require_POST
